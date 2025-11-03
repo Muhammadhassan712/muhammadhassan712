@@ -1,16 +1,23 @@
-## Hi there 👋
+## 🤖 Auto Reply Bot Example
 
-<!--
-**Muhammadhassan712/muhammadhassan712** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+Here’s an example GitHub Action that replies **"Hello, how are you doing?"**  
+whenever someone comments "hello" on your repository issues.
 
-Here are some ideas to get you started:
+```yaml
+name: Auto Reply Bot
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  reply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Say hello back
+        uses: peter-evans/create-or-update-comment@v3
+        if: contains(github.event.comment.body, 'hello')
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.issue.number }}
+          body: "Hello, how are you doing?"
